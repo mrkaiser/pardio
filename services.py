@@ -4,7 +4,7 @@ __author__ = 'mrkaiser'
 from rdio import Rdio
 from rdio_consumer_credentials import RDIO_CREDENTIALS
 import logging
-from flask import Flask, session, redirect, make_response
+from flask import Flask, session, redirect, make_response, request
 
 app = Flask(__name__)
 
@@ -14,7 +14,8 @@ def login():
     #clear all of our auth cookies
     #begin auth
     rdio = Rdio(RDIO_CREDENTIALS)
-    url = rdio.begin_authentication(callback_url=app.config['host']+'/callback')
+    app.logger.debug(request.host)
+    url = rdio.begin_authentication(callback_url=request.host+'/callback')
     redirect_to_rdio = redirect(url)
     #save our request token in cookies
     response = make_response(redirect_to_rdio)
@@ -47,4 +48,4 @@ def callback():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='127.0.0.1', debug=True)

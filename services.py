@@ -19,7 +19,7 @@ def login():
     redirect_to_rdio = redirect(url)
     #save our request token in cookies
     response = make_response(redirect_to_rdio)
-    app.logger.info(rdio.token)
+    print(rdio.token)
     response.set_cookie('rt', rdio.token[0], expires=60*60*24)
     response.set_cookie('rts', rdio.token[1], expires=60*60*24)
     #go to Rdio to authenticate the app
@@ -32,15 +32,15 @@ def callback():
     request_token = request.cookies.get('rt')
     request_token_secret = request.cookies.get('rts')
     verifier = request.args['oauth_verifier']
-    app.logger.info(request_token+'rts'+request_token_secret+'verifer'+verifier)
+    print(request_token+'rts'+request_token_secret+'verifer'+verifier)
     #make sure we have everything we need
     if request_token and request_token_secret and verifier:
         rdio = Rdio(RDIO_CREDENTIALS, (request_token, request_token_secret))
         rdio.complete_authentication(verifier)
-        app.logger.info('blah'+rdio.token)
+        print('blah'+rdio.token)
         redirect_to_home = redirect('/')
         response = make_response(redirect_to_home)
-        app.logger.info(rdio.token[0])
+        print(rdio.token[0])
         response.set_cookie('at', rdio.token[0], expires=60*60*24*14)   # expires in two weeks
         response.set_cookie('ats', rdio.token[1], expires=60*60*24*14)  # expires in two weeks
         response.set_cookie('rt', '', expires=-1)

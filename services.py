@@ -14,7 +14,7 @@ def login():
     #clear all of our auth cookies
     #begin auth
     rdio = Rdio(RDIO_CREDENTIALS)
-    url = rdio.begin_authentication(callback_url='127.0.0.1:5000/callback')
+    url = rdio.begin_authentication(callback_url=app.config['host']+'/callback')
     redirect_to_rdio = redirect(url)
     #save our request token in cookies
     response = make_response(redirect_to_rdio)
